@@ -19,7 +19,6 @@ return new class extends Migration
             //price
             $table->decimal('price', 8, 2);
             $table->foreignId('ticket_type_id')->nullable()->constrained();
-            
             $table->timestamps();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
