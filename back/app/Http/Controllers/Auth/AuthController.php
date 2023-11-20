@@ -12,6 +12,11 @@ use App\Http\Resources\Auth\LoginResource;
 //RegisterResource
 use App\Http\Resources\Auth\RegisterResource;
 
+use App\Models\User;
+
+//Socialite
+use Laravel\Socialite\Facades\Socialite;
+
 class AuthController extends Controller
 {
     
@@ -55,6 +60,14 @@ class AuthController extends Controller
         }
 
     }
+
+
+
+    function redirectToGoogle(){
+        return Socialite::driver('google')->redirect();
+    }
+
+
 
 
 }
