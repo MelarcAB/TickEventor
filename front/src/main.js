@@ -3,6 +3,12 @@ import './style.css'
 import App from './App.vue'
 import router from './router'
 
+import { IonIcon } from '@ionic/vue';
+
+
+
+
 createApp(App)
-.use (router)
-.mount('#app')
+    .component('IonIcon', IonIcon)
+    .use(router)
+    .mount('#app')
