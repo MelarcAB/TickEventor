@@ -67,6 +67,27 @@ class AuthController extends Controller
         return Socialite::driver('google')->redirect();
     }
 
+    function handleGoogleCallback(){
+        try{
+            $user = Socialite::driver('google')->user();
+            $user = User::firstOrCreate([
+                'email' => $user->email
+            ], [
+                'name' => $user->name,
+                'password' => bcrypt('12345678')
+            ]);
+            return response()->json([
+                'message' => 'User logged in successfully',
+                'data' => new LoginResource($user),
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
 
 
