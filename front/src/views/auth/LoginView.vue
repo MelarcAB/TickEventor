@@ -1,6 +1,6 @@
 <template>
     <MainLayout>
-        <div class="flex flex-col min-h-[calc(100vh-4rem)] "> <!-- Ajusta 4rem según sea necesario -->
+        <div class="flex flex-col min-h-[calc(100vh-4rem)]">
             <div class="mx-auto my-auto">
                 <div class="max-w-md w-full mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
                     <div class="p-6">
@@ -8,29 +8,38 @@
                         <form @submit.prevent="login" class="mt-8 space-y-6">
                             <div>
                                 <label for="email" class="sr-only">Correo electrónico</label>
-                                <input type="email" id="email" v-model="email" placeholder="Correo electrónico"
-                                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                    required>
+                                <div class="flex items-center border border-gray-300 rounded-md">
+                                    <IonIcon :icon="mailIcon" class="h-6 w-6 text-gray-500 m-2" />
+                                    <input type="email" id="email" v-model="email" placeholder="Correo electrónico"
+                                        class="w-full p-3 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        required>
+                                </div>
                             </div>
                             <div>
                                 <label for="password" class="sr-only">Contraseña</label>
-                                <input type="password" id="password" v-model="password" placeholder="Contraseña"
-                                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                    required>
+                                <div class="flex items-center border border-gray-300 rounded-md">
+                                    <IonIcon :icon="lockIcon" class="h-6 w-6 text-gray-500 m-2" />
+                                    <input type="password" id="password" v-model="password" placeholder="Contraseña"
+                                        class="w-full p-3 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        required>
+                                </div>
                             </div>
                             <div>
-                                <UserIcon class="h-6 w-6 text-blue-500" />
-
                                 <button type="submit"
                                     class="w-full p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
-
                                     Ingresar</button>
                             </div>
                             <div>
                                 <button type="button"
-                                    class="w-full p-3 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">
-                                    Iniciar Sesión con Google
+                                    class="w-full p-3 flex items-center justify-center bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:bg-gray-100">
+                                    <IonIcon :icon="logoGoogle" class="h-6 w-6 text-red-500" />
+                                    <span class="ml-2">Iniciar Sesión con Google</span>
                                 </button>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <p class="text-sm text-gray-600">¿No tienes cuenta? <a href="/register"
+                                        class="text-blue-600 hover:text-blue-800">Regístrate aquí</a></p>
+
                             </div>
                         </form>
                     </div>
@@ -39,15 +48,24 @@
         </div>
     </MainLayout>
 </template>
-  
+
 <script>
 import MainLayout from '@/views/layouts/MainLayout.vue';
-import { UserIcon } from "@vue-hero-icons/outline"
+import { IonIcon } from "@ionic/vue";
+import { mailOutline, lockClosedOutline, logoGoogle } from 'ionicons/icons';
 
 export default {
     name: 'LoginView',
     components: {
-        MainLayout
+        MainLayout,
+        IonIcon
+    },
+    setup() {
+        return {
+            mailIcon: mailOutline,
+            lockIcon: lockClosedOutline,
+            logoGoogle: logoGoogle
+        };
     },
     data() {
         return {
@@ -58,12 +76,15 @@ export default {
     methods: {
         login() {
             // Lógica de inicio de sesión
+        },
+        showAlert() {
+            this.$swal({
+                title: '¡Alerta de Ejemplo!',
+                text: 'Este es un texto de alerta',
+                icon: 'success',
+            });
         }
     }
 };
 </script>
-  
-<style>
-/* Puedes agregar estilos adicionales aquí si es necesario */
-</style>
-  
+

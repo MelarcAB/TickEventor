@@ -26,7 +26,8 @@
                             </div>
                             <div>
                                 <label for="password-confirm" class="sr-only">Confirmar Contraseña</label>
-                                <input type="password" id="password-confirm" v-model="passwordConfirm" placeholder="Confirmar Contraseña"
+                                <input type="password" id="password-confirm" v-model="passwordConfirm"
+                                    placeholder="Confirmar Contraseña"
                                     class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                     required>
                             </div>
@@ -35,6 +36,21 @@
                                     class="w-full p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Registrarse</button>
                             </div>
                         </form>
+
+                        <div>
+                            <button type="button"
+                                class="w-full p-3 flex items-center justify-center bg-white text-gray-700 rounded-md hover:bg-gray-100 focus:outline-none focus:bg-gray-100 mt-4">
+                                <IonIcon :icon="logoGoogle" class="h-6 w-6 text-red-500" />
+                                <span class="ml-2">Registrarse con Google</span>
+                            </button>
+                        </div>
+
+                        <p class="mt-6 text-center text-sm text-gray-600">
+                            ¿Ya tienes una cuenta?
+                            <router-link to="/login" class="font-medium text-blue-600 hover:text-blue-500">
+                                Iniciar sesión
+                            </router-link>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -44,27 +60,67 @@
 </template>
   
 <script>
-import { AcademicCapIcon } from "@vue-hero-icons/outline"
+import MainLayout from '@/views/layouts/MainLayout.vue';
 
+import { IonIcon } from "@ionic/vue";
+import { logoGoogle } from 'ionicons/icons';
+import axios from 'axios';
 
 let url_back = (import.meta.env.VITE_BACKEND_URL);
 
 export default {
     name: 'RegisterView',
     components: {
-        MainLayout
+        MainLayout,
+        IonIcon
+    },
+    setup() {
+        return {
+            logoGoogle: logoGoogle
+        };
     },
     data() {
         return {
             name: '',
             email: '',
             password: '',
-            passwordConfirm: ''
+            password_confirmation: ''
         };
     },
     methods: {
-        register() {
+        async register() {
+            this.$swal.showLoading();
+            console.log(this.name);
+            try {
+                const response = await axios.post(`${url_back}/api/register`, {
+                    name: this.name,
+                    email: this.email,
+                    password: this.password,
+                    password_confirmation: this.passwordConfirm,
+                });
+
+                this.$swal.close();
+                this.$swal({
+                    title: 'Registrado',
+                    text: 'Registro exitoso',
+                    icon: 'success',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.$router.push('/login');
+                    }
+                });
+            } catch (error) {
+                //if isset (error.response.data.message)
+                if (error.response.data.message) {
+                    this.$swal.close();
+                    this.$swal('Error', error.response.data.message, 'error');
+                } else {
+                    this.$swal.close();
+                    this.$swal('Error', 'Error al procesar la solicitud', 'error');
+                }
+            }
         }
+
     }
 };
 </script>

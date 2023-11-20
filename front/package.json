@@ -11,8 +11,10 @@
   "dependencies": {
     "@heroicons/vue": "^2.0.18",
     "@ionic/vue": "^7.5.5",
+    "axios": "^1.6.2",
     "vue": "^3.3.8",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue-sweetalert2": "^5.0.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.0",
