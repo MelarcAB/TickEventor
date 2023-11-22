@@ -21,7 +21,6 @@ class LoginResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'token' => $token,
-            // Puedes incluir también la fecha de expiración si es necesario
             'expires_at' => JWTAuth::setToken($token)->getPayload()->get('exp')
         ];
     }

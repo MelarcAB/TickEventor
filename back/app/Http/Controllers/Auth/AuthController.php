@@ -76,10 +76,9 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'password' => bcrypt('12345678')
             ]);
-            return response()->json([
-                'message' => 'User logged in successfully',
-                'data' => new LoginResource($user),
-            ], 200);
+            $redirect_url = env("FRONT_URL")."/auth/google/callback"."?token=".$user->createToken('auth_token')->plainTextToken;
+            return redirect($redirect_url);
+
         }catch(\Exception $e){
             return response()->json([
                 'message' => 'Error',
