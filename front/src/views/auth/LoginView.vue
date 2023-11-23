@@ -30,7 +30,7 @@
                                     Ingresar</button>
                             </div>
                             <div>
-                                <button type="button"
+                                <button type="button" @click="handleGoogleLogin"
                                     class="w-full p-3 flex items-center justify-center bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:bg-gray-100">
                                     <IonIcon :icon="logoGoogle" class="h-6 w-6 text-red-500" />
                                     <span class="ml-2">Iniciar Sesión con Google</span>
@@ -83,7 +83,31 @@ export default {
                 text: 'Este es un texto de alerta',
                 icon: 'success',
             });
+        },
+        async handleGoogleLogin() {
+            this.$swal.showLoading();
+            let url_back = (import.meta.env.VITE_BACKEND_URL);
+            let url = `${url_back}/auth/google`;
+            //abrir en nueva ventana emergente
+            let newWindow = window.open(url, '_blank', 'width=500,height=600');
+            //detectar cuando la nueva window esta en home y cerrarla
+
         }
+    },
+    mounted() {
+        newWindow.addEventListener('message', (event) => {
+            if (event.data.authSuccess) {
+                newWindow.close();
+                this.$router.push('/');
+            } else {
+                this.$swal.close();
+                this.$swal({
+                    title: 'Error',
+                    text: 'Ha ocurrido un error al iniciar sesión con Google, por favor vuelva a intentarlo',
+                    icon: 'error',
+                });
+            }
+        });
     }
 };
 </script>

@@ -5,7 +5,9 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: IndexView
+    component: IndexView,
+    meta: { requiresAuth: true }
+
   },
   {
     path: '/login',
@@ -16,12 +18,25 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: () => import('@/views/auth/RegisterView.vue')
-  }
+  },
+  {
+    path: '/auth/google',
+    name: 'AuthGoogle',
+  },
+  {
+    path: '/auth/google/callback',
+    name: 'GoogleCallback',
+    component: () => import('@/views/auth/GoogleCallback.vue') 
+  },
+
+
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 });
+
+
 
 export default router;
