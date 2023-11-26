@@ -6,7 +6,13 @@ const routes = [
     path: '/',
     name: 'Home',
     component: IndexView,
-    meta: { requiresAuth: true }
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next('/main');
+      } else {
+        next();
+      }
+    }
 
   },
   {
@@ -28,6 +34,13 @@ const routes = [
     name: 'GoogleCallback',
     component: () => import('@/views/auth/GoogleCallback.vue') 
   },
+  //main
+  {
+    path: '/main',
+    name: 'Main',
+    component: () => import('@/views/app/main/MainView.vue'),
+    meta: { requiresAuth: true }
+  },
 
 
 ];
@@ -36,6 +49,10 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 });
+
+function isAuthenticated() {
+  return !!localStorage.getItem('token'); // Retorna true si el token existe, false de lo contrario
+}
 
 
 
