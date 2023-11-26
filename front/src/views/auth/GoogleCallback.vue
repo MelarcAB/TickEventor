@@ -13,14 +13,12 @@ export default {
 
       // Notificar a la ventana principal en caso de que se haya abierto desde una ventana emergente
       if (window.opener) {
-        window.opener.postMessage({ authSuccess: true }, '*');
-        window.close(); // Cierra la ventana emergente
+        console.log('Enviando mensaje a la ventana principal');
+        window.opener.postMessage({ authSuccess: true }, 'http://localhost:5173');
+        window.close();
       } else {
-        // Si no es una ventana emergente, redirigir a la página principal
-        window.opener.postMessage({ authSuccess: false }, '*');
+        // Simplemente redirige a la página principal si no es una ventana emergente
         this.$router.push('/');
-        window.close(); // Cierra la ventana emergente
-
       }
     } else {
       // Manejar la ausencia de token o errores
