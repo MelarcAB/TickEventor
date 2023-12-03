@@ -3,27 +3,23 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
-//LoginResource
 use App\Http\Resources\Auth\LoginResource;
-//RegisterResource
 use App\Http\Resources\Auth\RegisterResource;
-
 use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
-//Socialite
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
-    
-    function login(LoginRequest $request){
-        try{
+
+    function login(LoginRequest $request)
+    {
+        try {
             $credentials = $request->validated();
-            if(!auth()->attempt($credentials)){
+            if (!auth()->attempt($credentials)) {
                 return response()->json([
                     'message' => 'Unauthorized'
                 ], 401);
@@ -33,7 +29,7 @@ class AuthController extends Controller
                 'message' => 'User logged in successfully',
                 'data' => new LoginResource($user),
             ], 200);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error',
                 'error' => $e->getMessage()
@@ -43,8 +39,9 @@ class AuthController extends Controller
     }
 
 
-    function register(RegisterRequest $request){
-        try{
+    function register(RegisterRequest $request)
+    {
+        try {
             $credentials = $request->validated();
             $credentials['password'] = bcrypt($credentials['password']);
             $user = \App\Models\User::create($credentials);
@@ -52,7 +49,7 @@ class AuthController extends Controller
                 'message' => 'User registered successfully',
                 'data' => new RegisterResource($user),
             ], 201);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error',
                 'error' => $e->getMessage()
@@ -61,14 +58,28 @@ class AuthController extends Controller
 
     }
 
-
-
-    function redirectToGoogle(){
+    /**
+     * Estas funciones de OAuth son para el login con Google
+     * solo se usan para redireccionar a la pagina de google y comunicarse con ella para obtener el token y enviarlo al front
+     */
+    /**
+     * Redirect the user to the Google authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function redirectToGoogle()
+    {
         return Socialite::driver('google')->redirect();
     }
 
-    function handleGoogleCallback(){
-        try{
+    /**
+     * Obtain the user information from Google and send it to the front.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function handleGoogleCallback()
+    {
+        try {
             $user = Socialite::driver('google')->user();
             $user = User::firstOrCreate([
                 'email' => $user->email
@@ -76,10 +87,11 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'password' => bcrypt('12345678')
             ]);
-            $redirect_url = env("FRONT_URL")."/auth/google/callback"."?token=".$user->createToken('auth_token')->plainTextToken;
+            $token = JWTAuth::fromUser($user);
+            $redirect_url = env("FRONT_URL") . "/auth/google/callback" . "?token=" . $token;
             return redirect($redirect_url);
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error',
                 'error' => $e->getMessage()

@@ -13,7 +13,6 @@ const routes = [
         next();
       }
     }
-
   },
   {
     path: '/login',
@@ -41,8 +40,6 @@ const routes = [
     component: () => import('@/views/app/main/MainView.vue'),
     meta: { requiresAuth: true }
   },
-
-
 ];
 
 const router = createRouter({
@@ -50,10 +47,31 @@ const router = createRouter({
   routes
 });
 
+// Guardia de ruta global
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated()) {
+    // Si la ruta requiere autenticación y el usuario no está autenticado,
+    // redirigir a la página de inicio de sesión.
+    next('/login');
+  } else {
+    // En cualquier otro caso, continuar con la ruta solicitada.
+    next();
+  }
+});
+
+/**
+ * Función que verifica si el usuario está autenticado
+ * @returns {boolean} true si el usuario está autenticado, false de lo contrario
+ */
 function isAuthenticated() {
-  return !!localStorage.getItem('token'); // Retorna true si el token existe, false de lo contrario
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return false;
+  }
+
+  // Opcional: Verifica si el token ha expirado
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  return payload.exp > Date.now() / 1000;
 }
-
-
 
 export default router;
