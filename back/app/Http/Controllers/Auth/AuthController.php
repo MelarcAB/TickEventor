@@ -11,9 +11,18 @@ use App\Models\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 use Laravel\Socialite\Facades\Socialite;
+use App\Repositories\User\Contracts\UserRepositoryInterface;
 
 class AuthController extends Controller
 {
+
+    protected $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
 
     function login(LoginRequest $request)
     {
@@ -43,8 +52,9 @@ class AuthController extends Controller
     {
         try {
             $credentials = $request->validated();
-            $credentials['password'] = bcrypt($credentials['password']);
-            $user = \App\Models\User::create($credentials);
+           // $user = \App\Models\User::create($credentials);
+
+            $user = $this->userRepository->register($credentials);
             return response()->json([
                 'message' => 'User registered successfully',
                 'data' => new RegisterResource($user),
