@@ -4,6 +4,8 @@ namespace App\Repositories\Event;
 
 use App\Models\Event;
 
+use App\Helpers\SlugService;
+
 use App\Repositories\Event\Contracts\EventRepositoryInterface;
 
 class EventRepository implements EventRepositoryInterface
@@ -17,12 +19,20 @@ class EventRepository implements EventRepositoryInterface
     {
         $data['created_by'] = $userId;
         $data['updated_by'] = $userId;
+
+        //generate slug
+        $data['slug'] = SlugService::createSlug(Event::class, $data['name']);
+
         return Event::create($data);
     }
 
-    public function update(array $data, $id)
+    public function update(array $data, $slug)
     {
-        return Event::find($id)->update($data);
+        $event = $this->findEventBySlug($slug);
+        //quitar slug del array
+        unset($data['slug']);
+        $event->update($data);
+        return $event;
     }
 
     public function delete($id)
@@ -38,5 +48,22 @@ class EventRepository implements EventRepositoryInterface
     public function findEventByName($name)
     {
         return Event::where('name', $name)->first();
+    }
+
+    public function findEventBySlug($slug)
+    {
+        return Event::where('slug', $slug)->first();
+    }
+
+    //generate slug
+    public function generateSlug($name)
+    {
+        $slug = str_slug($name, '-');
+        $count = 2;
+        while (Event::where('slug', $slug)->first()) {
+            $slug = $slug . '-' . $count;
+            $count++;
+        }
+        return $slug;
     }
 }

@@ -28,6 +28,12 @@ class Event extends Model
         'event_category_id',
         'created_by',
         'updated_by',
-        'deleted_by'
+        'deleted_by',
+        'slug'
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

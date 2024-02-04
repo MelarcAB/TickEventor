@@ -30,6 +30,9 @@ return new class extends Migration
             $table->string('image')->nullable();
             //event category
             $table->foreignId('event_category_id')->constrained();
+
+            //slug
+            $table->string('slug')->unique();
          
             //foreign keys
             $table->foreignId('created_by')->constrained('users');

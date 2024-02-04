@@ -9,7 +9,7 @@ interface EventRepositoryInterface
 
     public function create(array $data,$userId);
 
-    public function update(array $data, $id);
+    public function update(array $data, $slug);
 
     public function delete($id);
 
