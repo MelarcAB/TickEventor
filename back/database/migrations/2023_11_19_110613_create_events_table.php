@@ -33,12 +33,18 @@ return new class extends Migration
          
             //foreign keys
             $table->foreignId('created_by')->constrained('users');
-            $table->foreignId('updated_by')->constrained('users');
+            $table->foreignId('updated_by')->constrained('users')->nullable();
             $table->foreignId('deleted_by')->nullable()->constrained('users');
    
             //timestamps
             $table->timestamps();
             $table->softDeletes();
+            
+            //indexes
+            $table->index('start_date');
+            $table->index('end_date');
+            $table->index('place');
+            $table->index('name');
 
         });
     }
