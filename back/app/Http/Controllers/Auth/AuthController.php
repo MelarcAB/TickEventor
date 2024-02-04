@@ -12,15 +12,18 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 use Laravel\Socialite\Facades\Socialite;
 use App\Repositories\User\Contracts\UserRepositoryInterface;
+use App\Services\AuthService;
 
 class AuthController extends Controller
 {
 
     protected $userRepository;
+    protected $authService;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository,AuthService $authService)
     {
         $this->userRepository = $userRepository;
+        $this->authService = $authService;
     }
 
 
@@ -28,16 +31,14 @@ class AuthController extends Controller
     {
         try {
             $credentials = $request->validated();
-            if (!auth()->attempt($credentials)) {
-                return response()->json([
-                    'message' => 'Unauthorized'
-                ], 401);
-            }
-            $user = auth()->user();
+            $user = $this->authService->login($credentials);
+            if($user){
+                return response()->json(new LoginResource($user), 200);
+            } 
             return response()->json([
-                'message' => 'User logged in successfully',
-                'data' => new LoginResource($user),
-            ], 200);
+                'message' => 'Unauthorized'
+            ], 401);
+            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error',
@@ -52,13 +53,10 @@ class AuthController extends Controller
     {
         try {
             $credentials = $request->validated();
-           // $user = \App\Models\User::create($credentials);
+            // $user = \App\Models\User::create($credentials);
 
             $user = $this->userRepository->register($credentials);
-            return response()->json([
-                'message' => 'User registered successfully',
-                'data' => new RegisterResource($user),
-            ], 201);
+            return response()->json(new RegisterResource($user),201 );
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error',

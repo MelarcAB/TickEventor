@@ -15,13 +15,13 @@ class LoginResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $token = JWTAuth::fromUser($this->resource);
-
+        $user = ($this->resource['user']);
+        $token = ($this->resource['token']);
         return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'token' => $token,
-            'expires_at' => JWTAuth::setToken($token)->getPayload()->get('exp')
+            'name' => $user->name,
+            'email' => $user->email,
+            'created_at' => $user->created_at,
+            'token' => $token
         ];
     }
 }

@@ -5,6 +5,8 @@ namespace App\Repositories\User;
 use App\Models\User;
 use App\Repositories\User\Contracts\UserRepositoryInterface;
 
+use Auth;
+
 class UserRepository implements UserRepositoryInterface
 {
     protected $model;
@@ -46,6 +48,8 @@ class UserRepository implements UserRepositoryInterface
 
     public function register(array $data)
     {
+        //Encrypt password
+        $data['password'] = bcrypt($data['password']);
         
         return User::create($data);
     }
@@ -54,6 +58,7 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::where('email', $email)->first();
     }
+
 
 
 
