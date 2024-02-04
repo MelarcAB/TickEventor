@@ -18,6 +18,15 @@ class AuthService
         $this->userRepository = $userRepository;
     }
 
+
+
+    public function register(array $data)
+    {
+        //Encrypt password
+        $data['password'] = bcrypt($data['password']);
+        return $this->userRepository->register($data);
+    }
+
     public function login(array $credentials)
     {
         if (Auth::attempt($credentials)) {

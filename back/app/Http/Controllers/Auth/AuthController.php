@@ -53,9 +53,7 @@ class AuthController extends Controller
     {
         try {
             $credentials = $request->validated();
-            // $user = \App\Models\User::create($credentials);
-
-            $user = $this->userRepository->register($credentials);
+            $user = $this->authService->register($credentials);
             return response()->json(new RegisterResource($user),201 );
         } catch (\Exception $e) {
             return response()->json([

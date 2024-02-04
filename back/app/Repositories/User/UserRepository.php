@@ -49,7 +49,7 @@ class UserRepository implements UserRepositoryInterface
     public function register(array $data)
     {
         //Encrypt password
-        $data['password'] = bcrypt($data['password']);
+       // $data['password'] = bcrypt($data['password']);
         
         return User::create($data);
     }
