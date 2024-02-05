@@ -72,8 +72,22 @@ class EventController extends Controller
     {
         try {
             $data = $request->validated();
-            $event = $this->eventRepository->update($request->all(), $slug);
-            return new EventResource($event);
+            $event = $this->eventRepository->findEventBySlug($slug);
+
+            if (!$event) {
+                return response()->json([
+                    'message' => 'Event not found'
+                ], 404);
+            }
+            $this->authorize('update', $event);
+
+            $eventUpdate = $this->eventRepository->update($data, $event->slug);
+            return new EventResource($eventUpdate);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json([
+                'message' => 'Unauthorized',
+                'error' => $e->getMessage()
+            ], 403);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error',
@@ -81,6 +95,7 @@ class EventController extends Controller
             ], 500);
         }
     }
+
 
     public function destroy($slug)
     {
@@ -91,6 +106,7 @@ class EventController extends Controller
                     'message' => 'Event not found'
                 ], 404);
             }
+            $this->authorize('delete', $event);
             $user = JWTAuth::parseToken()->authenticate();
             $this->eventRepository->delete($event->id, $user->id);
             return response()->json([
@@ -104,6 +120,6 @@ class EventController extends Controller
         }
     }
 
-   
+
 
 }
