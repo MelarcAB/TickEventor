@@ -27,6 +27,11 @@ class EventController extends Controller
     public function index()
     {
         $events = $this->eventRepository->all();
+        if (!$events) {
+            return response()->json([
+                'message' => 'No events found'
+            ], 404);
+        }
         return EventResource::collection($events);
     }
 
@@ -45,10 +50,22 @@ class EventController extends Controller
     }
 
 
-    public function show($id)
+    public function show($slug)
     {
-        $event = $this->eventRepository->find($id);
-        return new EventResource($event);
+        try {
+            $event = $this->eventRepository->findEventBySlug($slug);
+            if (!$event) {
+                return response()->json([
+                    'message' => 'Event not found'
+                ], 404);
+            }
+            return new EventResource($event);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(EventUpdateRequest $request, $slug)
@@ -64,5 +81,29 @@ class EventController extends Controller
             ], 500);
         }
     }
+
+    public function destroy($slug)
+    {
+        try {
+            $event = $this->eventRepository->findEventBySlug($slug);
+            if (!$event) {
+                return response()->json([
+                    'message' => 'Event not found'
+                ], 404);
+            }
+            $user = JWTAuth::parseToken()->authenticate();
+            $this->eventRepository->delete($event->id, $user->id);
+            return response()->json([
+                'message' => 'Event deleted'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+   
 
 }

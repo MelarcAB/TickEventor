@@ -8,6 +8,9 @@ use App\Repositories\User\UserRepository;
 use App\Repositories\Event\Contracts\EventRepositoryInterface;
 use App\Repositories\Event\EventRepository;
 
+use App\Repositories\Event\Contracts\EventCategoryRepositoryInterface;
+use App\Repositories\Event\EventCategoryRepository;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -20,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         
         //Event
         $this->app->bind(EventRepositoryInterface::class, EventRepository::class);
+        $this->app->bind(EventCategoryRepositoryInterface::class, EventCategoryRepository::class);
     }
 
     /**

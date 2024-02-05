@@ -11,9 +11,12 @@ interface EventRepositoryInterface
 
     public function update(array $data, $slug);
 
-    public function delete($id);
+    public function delete($id, $userId);
 
     public function find($id);
 
     public function findEventByName($name);
+
+    //findEventBySlug
+    public function findEventBySlug($slug);
 }

@@ -7,6 +7,8 @@ use Illuminate\Database\Seeder;
 // use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\DB;
 
+use App\Repositories\Event\EventCategoryRepository;
+
 
 class EventCategoriesSeeder extends Seeder
 {
@@ -15,6 +17,7 @@ class EventCategoriesSeeder extends Seeder
      */
     public function run(): void
     {
+        $eventCategoryRepository = new EventCategoryRepository();
         //categorias de eventos
         $categories = [
             [
@@ -60,7 +63,7 @@ class EventCategoriesSeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            \App\Models\Events\EventCategory::create($category);
+            $eventCategoryRepository->create($category,null);
         }
     }
 }

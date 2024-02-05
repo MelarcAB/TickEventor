@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Events\EventCategory;
+
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Event extends Model
@@ -35,5 +37,12 @@ class Event extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+
+    //event belongs to a category
+    public function eventCategory()
+    {
+        return $this->belongsTo(EventCategory::class, 'event_category_id');
     }
 }

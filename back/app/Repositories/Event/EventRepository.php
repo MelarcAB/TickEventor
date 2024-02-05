@@ -35,9 +35,13 @@ class EventRepository implements EventRepositoryInterface
         return $event;
     }
 
-    public function delete($id)
+    public function delete($id, $userId)
     {
-        return Event::find($id)->delete();
+        //soft delete
+        $event = $this->find($id);
+        $event->deleted_by = $userId;
+        $event->save();
+        $event->delete();
     }
 
     public function find($id)
@@ -54,6 +58,12 @@ class EventRepository implements EventRepositoryInterface
     {
         return Event::where('slug', $slug)->first();
     }
+
+
+
+
+
+    
 
     //generate slug
     public function generateSlug($name)
