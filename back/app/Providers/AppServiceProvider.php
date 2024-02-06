@@ -11,6 +11,9 @@ use App\Repositories\Event\EventRepository;
 use App\Repositories\Event\Contracts\EventCategoryRepositoryInterface;
 use App\Repositories\Event\EventCategoryRepository;
 
+use App\Repositories\Event\Contracts\EventFollowRepositoryInterface;
+use App\Repositories\Event\EventFollowRepository;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -24,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
         //Event
         $this->app->bind(EventRepositoryInterface::class, EventRepository::class);
         $this->app->bind(EventCategoryRepositoryInterface::class, EventCategoryRepository::class);
+        //follow
+        $this->app->bind(EventFollowRepositoryInterface::class, EventFollowRepository::class);
     }
 
     /**

@@ -45,4 +45,15 @@ class Event extends Model
     {
         return $this->belongsTo(EventCategory::class, 'event_category_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    //event has many users
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'event_users')->withTimestamps();
+    }
 }
