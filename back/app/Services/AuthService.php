@@ -19,7 +19,6 @@ class AuthService
     }
 
 
-
     public function register(array $data)
     {
         //Encrypt password
@@ -38,7 +37,6 @@ class AuthService
         }
         return null;
     }
-
 
 
     /**

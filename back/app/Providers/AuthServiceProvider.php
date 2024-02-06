@@ -6,7 +6,9 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 use App\Models\Event;
+use App\Models\Events\EventCategory;
 use App\Policies\EventPolicy;
+use App\Policies\EventCategoryPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Event::class => EventPolicy::class,
+        EventCategory::class => EventCategoryPolicy::class,
 
     ];
 

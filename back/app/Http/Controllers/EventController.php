@@ -17,12 +17,17 @@ class EventController extends Controller
 {
 
 
-    private $eventRepository;
-
-    public function __construct(EventRepositoryInterface $eventRepository)
+    /**esto es lo mismo que
+     * private $eventRepository;
+     * public function __construct(EventRepositoryInterface $eventRepository)
+     * {
+     * $this->eventRepository = $eventRepository;
+     * }
+     */
+    public function __construct(private EventRepositoryInterface $eventRepository)
     {
-        $this->eventRepository = $eventRepository;
     }
+
 
     public function index()
     {

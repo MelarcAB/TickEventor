@@ -61,19 +61,4 @@ class EventRepository implements EventRepositoryInterface
 
 
 
-
-
-    
-
-    //generate slug
-    public function generateSlug($name)
-    {
-        $slug = str_slug($name, '-');
-        $count = 2;
-        while (Event::where('slug', $slug)->first()) {
-            $slug = $slug . '-' . $count;
-            $count++;
-        }
-        return $slug;
-    }
 }

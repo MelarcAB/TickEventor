@@ -49,8 +49,19 @@ class UserRepository implements UserRepositoryInterface
     public function register(array $data)
     {
         //Encrypt password
-       // $data['password'] = bcrypt($data['password']);
-        
+        // $data['password'] = bcrypt($data['password']);
+        //forzar role "user"
+        $data['role'] = 'user';
+        return User::create($data);
+    }
+
+
+    public function registerAdmin(array $data)
+    {
+        //Encrypt password
+        $data['password'] = bcrypt($data['password']);
+        //forzar role "admin"
+        $data['role'] = 'admin';
         return User::create($data);
     }
 

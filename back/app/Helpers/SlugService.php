@@ -21,12 +21,10 @@ class SlugService
        $slug = Str::slug($name);
        $originalSlug = $slug;
        $count = 1;
-
        // Aquí, $modelName se usa para crear una consulta sobre el modelo específico.
        while ($modelName::where($columnName, '=', $slug)->exists()) {
            $slug = $originalSlug . '-' . $count++;
        }
-
        return $slug;
    }
 }
