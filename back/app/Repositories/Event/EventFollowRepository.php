@@ -35,11 +35,7 @@ class EventFollowRepository implements EventFollowRepositoryInterface
     public function followEvent($userId, $eventSlug)
     {
         $event = $this->eventRepository->findEventBySlug($eventSlug);
-
-        // Verifica si el evento existe
         $user = $this->userRepository->find($userId);
-
-        // Verifica si el evento pertenece al usuario
         if ($event->created_by == $userId) {
             throw new \Exception("You cannot follow your own event.");
         }
@@ -57,20 +53,15 @@ class EventFollowRepository implements EventFollowRepositoryInterface
         try {
             $event =    $this->eventRepository->findEventBySlug($eventSlug);
             $user =     $this->userRepository->find($userId);
-
             // Verifica si el usuario ha creado el evento
             if ($event->created_by == $userId) {
                 throw new \Exception("You cannot unfollow your own event.");
             }
-
-
-
             // Verifica si el usuario ya sigue el evento
             $alreadyFollowing = $user->following()->where('event_id', $event->id)->exists();
             if (!$alreadyFollowing) {
                 throw new \Exception("You are not following this event.");
             }
-
             $user->following()->detach($event->id);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());

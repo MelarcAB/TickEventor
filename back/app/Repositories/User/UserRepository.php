@@ -10,7 +10,6 @@ use Auth;
 class UserRepository implements UserRepositoryInterface
 {
     protected $model;
-
     public function __construct(User $user)
     {
         $this->model = $user;
@@ -43,9 +42,6 @@ class UserRepository implements UserRepositoryInterface
         return $this->model->find($id);
     }
 
-
-
-
     public function register(array $data)
     {
         //Encrypt password
@@ -54,7 +50,6 @@ class UserRepository implements UserRepositoryInterface
         $data['role'] = 'user';
         return User::create($data);
     }
-
 
     public function registerAdmin(array $data)
     {

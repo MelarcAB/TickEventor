@@ -14,6 +14,8 @@ use App\Repositories\Event\EventCategoryRepository;
 use App\Repositories\Event\Contracts\EventFollowRepositoryInterface;
 use App\Repositories\Event\EventFollowRepository;
 
+use App\Repositories\Notification\Contracts\NotificationInterface;
+use App\Services\EmailService;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -29,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(EventCategoryRepositoryInterface::class, EventCategoryRepository::class);
         //follow
         $this->app->bind(EventFollowRepositoryInterface::class, EventFollowRepository::class);
+
+        //Notification
+        $this->app->bind(NotificationInterface::class, EmailService::class);
     }
 
     /**
